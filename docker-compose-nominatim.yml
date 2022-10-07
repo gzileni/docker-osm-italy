@@ -1,19 +1,33 @@
-version: "3"
+# https://github.com/mediagis/nominatim-docker/tree/master/4.1
+
+version: "3.8"
 
 services:
-    nominatim:
-        container_name: nominatim
-        image: mediagis/nominatim:4.1
-        restart: always
-        ports:
-          - "8080:8080"
-        environment:
-          PBF_URL: ${PBF_URL}
-          REPLICATION_URL: ${REPLICATION_URL}
-        volumes:
-          - ./data/nominatim/db:/var/lib/postgresql/14/main
-          - ./data/nominatim/flatnode:/nominatim/flatnode
-        shm_size: 1gb
+  nominatim:
+    container_name: nominatim-italy
+    image: gzileni/nominatim:4.1
+    build: ./nominatim
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      PBF_PATH: ${PBF_PATH}
+      REPLICATION_URL: ${REPLICATION_URL}
+      UPDATE_MODE: ${UPDATE_MODE}
+    volumes:
+      - ./data/nominatim/db:/var/lib/postgresql/14/main
+      - ./data/nominatim/flatnode:/nominatim/flatnode
+    shm_size: 1gb
+    networks:
+      - osm-network
+
+networks:
+  osm-network:
+    driver: bridge
+    ipam: 
+      driver: default
+      config: 
+        - subnet: 192.168.191.0/24
 
 volumes:
     nominatim-data:
