@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+    overpass-italy:
+        image: wiktorn/overpass-api:0.7.56.9
+        # image: gzileni/overpass
+        # build: ./overpass
+        container_name: overpass-italy
+        ports:
+            - 8083:80
+        volumes:
+            - ./data/overpass/italy:/db
+        environment:
+            - OVERPASS_META=${OVERPASS_META}
+            - OVERPASS_MODE=${OVERPASS_MODE}
+            - OVERPASS_PLANET_URL=${OVERPASS_PLANET_URL}
+            - OVERPASS_DIFF_URL=${OVERPASS_DIFF_URL}
