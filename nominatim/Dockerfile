@@ -57,8 +57,8 @@ RUN true \
         # Misc.
         git \
         curl \
-        sudo
-
+        sudo \
+        wget
 
 # Configure postgres.
 RUN true \
@@ -73,6 +73,7 @@ ENV NOMINATIM_VERSION 4.1.0
 
 RUN true \
     && curl https://nominatim.org/release/Nominatim-$NOMINATIM_VERSION.tar.bz2 -o nominatim.tar.bz2 \
+    && curl "http://download.geofabrik.de/europe/italy/nord-ovest-latest.osm.pbf" --output nord-ovest-latest.osm.pbf \
     && tar xf nominatim.tar.bz2 \
     && mkdir build \
     && cd build \
@@ -95,6 +96,8 @@ RUN true \
         libclang-*-dev \
         build-essential \
         postgresql-server-dev-14 \
+        wget \
+        curl \
     && apt-get clean \
     # Clear temporary files and directories.
     && rm -rf \
@@ -139,8 +142,5 @@ EXPOSE 5432
 EXPOSE 8080
 
 COPY conf.d/env $PROJECT_DIR/.env
-
-WORKDIR /nominatim/
-RUN curl -L http://download.geofabrik.de/europe/italy/nord-ovest-latest.osm.pbf -C - --create-dirs -o data.osm.pbf
 
 CMD ["/app/start.sh"]
