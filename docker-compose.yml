@@ -1,33 +1,28 @@
 version: '3.8'
 
 services:
-  overpass:
-    container_name: overpass-italy
-    image: gzileni/overpass-italy
+  overpass-italy:
+    image: gzileni/overpass
     build: ./overpass
-    restart: always
-    environment:
-      - OVERPASS_PLANET_URL=${OVERPASS_PLANET_URL}
-      - OVERPASS_META=${OVERPASS_META}
-      - OVERPASS_MODE=${OVERPASS_MODE}
-      - OVERPASS_DIFF_URL=${OVERPASS_DIFF_URL}
-      - OVERPASS_RULES_LOAD=${OVERPASS_RULES_LOAD}
-    volumes:
-      - ./data/overpass/:/db
+    mem_reservation: 2G
+    container_name: overpass-italy
     ports:
-      - '8086:80'
+        - 8083:80
 
   nominatim:
     container_name: nominatim-italy
+    image: gzileni/nominatim
     build: ./nominatim
-    image: gzileni/nominatim-italy
     restart: always
-    environment:
-      - PBF_PATH=${PBF_PATH}
-      - REPLICATION_URL=${REPLICATION_URL}
-    volumes:
-      - ./data/nominatim/db:/var/lib/postgresql/14/main
-      - ./data/nominatim/flatnode:/nominatim/flatnode
-    shm_size: 1gb
+    mem_reservation: 2G
     ports:
-      - '8085:8080'
+        - "8082:8080"
+    environment:
+        PBF_PATH: ${PBF_PATH}
+        REPLICATION_URL: ${REPLICATION_URL}
+        UPDATE_MODE: ${UPDATE_MODE}
+    volumes:
+        - ./data/nominatim/db:/var/lib/postgresql/14/main
+        - ./data/nominatim/osm:/nominatim/data 
+    shm_size: 1gb
+
