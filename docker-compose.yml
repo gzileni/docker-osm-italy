@@ -2,15 +2,23 @@ version: '3.8'
 
 services:
   overpass-italy:
-    image: gzileni/overpass
-    build: ./overpass
+    image: wiktorn/overpass-api
     mem_reservation: 2G
-    container_name: overpass-italy
+    restart: always
+    container_name: overpass-nord-ovest
+    environment:
+        OVERPASS_META: ${OVERPASS_META}
+        OVERPASS_MODE: ${OVERPASS_MODE}
+        OVERPASS_PLANET_URL: ${OVERPASS_PLANET_URL}
+        OVERPASS_DIFF_URL: ${OVERPASS_DIFF_URL}
+        OVERPASS_RULES_LOAD: ${OVERPASS_RULES_LOAD}
     ports:
-        - 8083:80
+        - "8083:80"
+    volumes:
+        - ./data/overpass:/db
 
   nominatim:
-    container_name: nominatim-italy
+    container_name: nominatim-nord-ovest
     image: gzileni/nominatim
     build: ./nominatim
     restart: always
